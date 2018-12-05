@@ -1,9 +1,10 @@
 # Work with Python 3.6
 import numpy as np
+import os
 from discord.ext.commands import Bot
 
 BOT_PREFIX = ("?", "!")
-TOKEN = "eciYbw7g_rRAfQ3tFvPKwdHZ5dPGi5bB"  # Get at discordapp.com/developers/applications/me
+TOKEN = os.environ['ACCESS_TOKEN'] # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
