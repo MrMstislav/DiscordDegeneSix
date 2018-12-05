@@ -9,6 +9,4 @@ git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
 #   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
 #
 ###### Refer to other requirements files ######
--r other-requirements.txt
-#
 #
