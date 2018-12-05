@@ -1,0 +1,14 @@
+#
+####### example-requirements.txt #######
+#
+###### Requirements without Version Specifiers ######
+numpy
+git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
+#
+###### Requirements with Version Specifiers ######
+#   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
+#
+###### Refer to other requirements files ######
+-r other-requirements.txt
+#
+#

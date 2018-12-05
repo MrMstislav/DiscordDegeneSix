@@ -3,7 +3,7 @@ import numpy as np
 from discord.ext.commands import Bot
 
 BOT_PREFIX = ("?", "!")
-TOKEN = ""  # Get at discordapp.com/developers/applications/me
+TOKEN = "eciYbw7g_rRAfQ3tFvPKwdHZ5dPGi5bB"  # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
