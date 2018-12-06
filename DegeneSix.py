@@ -4,7 +4,7 @@ import os
 from discord.ext.commands import Bot
 
 BOT_PREFIX = ("?", "!")
-TOKEN = os.environ['ACCESS_TOKEN'] # Get at discordapp.com/developers/applications/me
+TOKEN = os.environ.get['ACCESS_TOKEN'] # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
@@ -26,7 +26,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     ones = (roll == 1).sum()
 
     if difficulty:
-        result = ('Success!\n' if successes >= difficulty else "Failure!\n") if ones < successes else 'It\'s a botch!\n'
+        result = ('Success!\n :degenesis:' if successes >= difficulty else "Failure!\n") if ones < successes else 'It\'s a botch!\n'
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty)
     else:
         result = '' if ones < successes else 'It\'s a botch!\n'
