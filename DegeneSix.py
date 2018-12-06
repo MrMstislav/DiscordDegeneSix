@@ -4,7 +4,7 @@ import os
 from discord.ext.commands import Bot
 
 BOT_PREFIX = ("?", "!")
-TOKEN = os.environ.get['ACCESS_TOKEN'] # Get at discordapp.com/developers/applications/me
+TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=BOT_PREFIX)
 
