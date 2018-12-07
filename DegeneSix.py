@@ -1,20 +1,20 @@
 # Work with Python 3.6
 import numpy as np
 import os
-from discord.ext.commands import Bot, when_mentioned_or
+import discord
+from discord.ext.commands import Bot, when_mentioned_or, Context
 
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX))
-
 # bot = discord.bot()
 
 @bot.command(
     name='Degene6',
     description="Rolls a Degenesis dice pool.",
     brief="Sacrifice everything",
-    aliases=['D6', '6pool','roll','','dee6'],
+    aliases=['D6', '6pool','roll','dee6'],
     pass_context=True)
 async def degenesix(context,actionNumber:int,difficulty=0):
     autos = 0 if actionNumber < 13 else actionNumber-12
@@ -36,6 +36,15 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     triggers,
     result)
     await context.send(msg)
+    
+@bot.event
+async def on_message(msg):
+    # we do not want the bot to reply to itself
+    if message.author.bot return
+    if len(msg.mentions) == 1 and msg.mentions[0] == client.user:
+        ctx = await bot.get_context()
+        args = msg.split(' ')[1:]
+        return degenesix(ctx,*args)
 
 @bot.event
 async def on_ready():
