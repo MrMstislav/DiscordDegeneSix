@@ -42,7 +42,7 @@ async def on_message(msg):
     # we do not want the bot to reply to itself
     if msg.author.bot:
         return 0
-    if len(msg.mentions) == 1 and msg.mentions[0] == client.user:
+    if len(msg.mentions) == 1 and msg.mentions[0] == bot.user:
         ctx = await bot.get_context()
         args = msg.split(' ')[1:]
         return degenesix(ctx,*args)
