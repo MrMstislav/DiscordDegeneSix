@@ -14,7 +14,7 @@ bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX))
     name='Degene6',
     description="Rolls a Degenesis dice pool.",
     brief="Sacrifice everything",
-    aliases=['D6', '6pool','roll'],
+    aliases=['D6', '6pool','roll','','dee6'],
     pass_context=True)
 async def degenesix(context,actionNumber:int,difficulty=0):
     autos = 0 if actionNumber < 13 else actionNumber-12
