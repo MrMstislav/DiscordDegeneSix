@@ -2,7 +2,7 @@
 import numpy as np
 import os
 import discord
-from discord.ext.commands import Bot, when_mentioned_or, Context
+from discord.ext.commands import Bot, when_mentioned_or
 
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
@@ -37,15 +37,15 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     result)
     await context.send(msg)
     
-@bot.event
-async def on_message(msg):
-    # we do not want the bot to reply to itself
-    if msg.author.bot:
-        return 0
-    if len(msg.mentions) == 1 and msg.mentions[0] == bot.user:
-        ctx = await bot.get_context(message=msg)
-        args = msg.content.split(' ')[1:]
-        return degenesix(ctx,*args)
+# @bot.event
+# async def on_message(msg):
+#     # we do not want the bot to reply to itself
+#     if msg.author.bot:
+#         return 0
+#     if len(msg.mentions) == 1 and msg.mentions[0] == bot.user:
+#         ctx = await bot.get_context(message=msg)
+#         args = msg.content.split(' ')[1:]
+#         return degenesix(ctx,*args)
 
 @bot.event
 async def on_ready():
