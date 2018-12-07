@@ -44,7 +44,7 @@ async def on_message(msg):
         return 0
     if len(msg.mentions) == 1 and msg.mentions[0] == bot.user:
         ctx = await bot.get_context(message=msg)
-        args = msg.split(' ')[1:]
+        args = msg.content.split(' ')[1:]
         return degenesix(ctx,*args)
 
 @bot.event
