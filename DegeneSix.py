@@ -1,12 +1,12 @@
 # Work with Python 3.6
 import numpy as np
 import os
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, when_mentioned_or
 
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
-bot = Bot(command_prefix=BOT_PREFIX)
+bot = Bot(command_prefix=when_mentioned_or(BOT_PREFIX))
 
 # bot = discord.bot()
 
@@ -26,7 +26,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     ones = (roll == 1).sum()
 
     if difficulty:
-        result = ('*Success!* :degenesis:\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'
+        result = ('*Success!* <:degenesis:>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty)
     else:
         result = '' if ones <= successes else '*It\'s a botch!* :skull:\n'
