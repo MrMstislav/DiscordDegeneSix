@@ -6,7 +6,7 @@ from discord.ext.commands import Bot, when_mentioned_or
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
-bot = Bot(command_prefix=when_mentioned_or(BOT_PREFIX))
+bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX))
 
 # bot = discord.bot()
 
