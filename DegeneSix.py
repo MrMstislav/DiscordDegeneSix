@@ -26,7 +26,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     ones = (roll == 1).sum()
 
     if difficulty:
-        result = ('*Success!* <:degenesis:>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'
+        result = ('*Success!* <:degenesis:484759543423696896>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty)
     else:
         result = '' if ones <= successes else '*It\'s a botch!* :skull:\n'
