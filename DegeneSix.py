@@ -30,7 +30,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty) if autos == 0 else "%s needs %d successes, already has %d automatic and rolls:" % (context.author.mention,difficulty,autos)
     else:
         result = '' if ones <= successes else '*It\'s a botch!* :skull:\n'
-        msg = "%s rolls:" % (context.author.mention) if autos == 0 else "%s has %d automatic successes and rolls:" % (context.author.mention, autos):
+        msg = "%s rolls:" % (context.author.mention) if autos == 0 else "%s has %d automatic successes and rolls:" % (context.author.mention, autos)
     msg+= " \n %s \n %d successes, %d triggers \n %s" % (', '.join(map(str,roll)),
     successes,
     triggers,
