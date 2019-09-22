@@ -36,6 +36,33 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     triggers,
     result)
     await context.send(msg)
+
+@bot.command(
+    name='GegromeGetroll',
+    description="Rolls a hacked Degenesis dice pool.",
+    brief="I am the creator.",
+    aliases=['GeeGee6','Gerome Getroll'],
+    pass_context=True)
+async def degenesix(context,actionNumber:int,difficulty=0):
+    autos = 0 if actionNumber < 13 else actionNumber-12
+    actionNumber = 12 if actionNumber > 13 else actionNumber
+    roll = np.random.choice([1,5,6],actionNumber,p=[0.25,0.25,0.5])
+    successes = (roll > 3).sum()
+    successes += autos
+    triggers = (roll == 6).sum()
+    ones = (roll == 1).sum()
+
+    if difficulty:
+        result = ('*Just as planned* <:rg:552217767349321757>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'        
+        msg = "GG needs %d successes and rolls:" % (difficulty) if autos == 0 else "GG needs %d successes, already had %d cryofreezed and rolls:" % (difficulty,autos)
+    else:
+        result = '' if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'
+        msg = "GG had always planned to roll:" if autos == 0 else "GG acquired %d automatic successes back in 2079 and rolls:" % (autos)
+    msg+= " \n %s \n %d successes, %d triggers \n %s" % (', '.join(map(str,roll)),
+    successes,
+    triggers,
+    result)
+    await context.send(msg)
     
 # @bot.event
 # async def on_message(msg):
