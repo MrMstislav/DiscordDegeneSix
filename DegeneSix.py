@@ -63,6 +63,16 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     triggers,
     result)
     await context.send(msg)
+
+@bot.command(
+    name='DevInfo',
+    description="Developer Information",
+    brief="Code availability",
+    aliases=['DI'],
+    pass_context=False)
+async def degenesix(context):
+    msg = "Code available at: https://github.com/MrMstislav/DiscordDegeneSix/\n"
+    await context.send(msg)
     
 # @bot.event
 # async def on_message(msg):
