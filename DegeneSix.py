@@ -26,7 +26,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     ones = (roll == 1).sum()
 
     if difficulty:
-        result = ('*Success!* <:degenesis:484759543423696896>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'        
+        result = ('*Success!* <:degenesis:684046972134490130>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'        
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty) if autos == 0 else "%s needs %d successes, already has %d automatic and rolls:" % (context.author.mention,difficulty,autos)
     else:
         result = '' if ones <= successes else '*It\'s a botch!* :skull:\n'
@@ -53,7 +53,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     ones = (roll == 1).sum()
 
     if difficulty:
-        result = ('*Just as planned* <:rg:552217767349321757>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'        
+        result = ('*Just as planned* <:rg:684046905180684288>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'        
         msg = "GG needs %d successes and rolls:" % (difficulty) if autos == 0 else "GG needs %d successes, already had %d cryofreezed and rolls:" % (difficulty,autos)
     else:
         result = '' if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'
