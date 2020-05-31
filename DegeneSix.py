@@ -3,6 +3,7 @@ import numpy as np
 import os
 import discord
 from discord.ext.commands import Bot, when_mentioned_or
+from discord.utils import get
 
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
@@ -24,9 +25,10 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     successes += autos
     triggers = (roll == 6).sum()
     ones = (roll == 1).sum()
+    degEmoji = get(context.message.guild.emojis, name="degenesis") 
 
     if difficulty:
-        result = ('*Success!* <:degenesis:684046972134490130>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'        
+        result = (f'*Success!* {degEmoji}\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*It\'s a botch!* :skull:\n'        
         msg = "%s needs %d successes and rolls:" % (context.author.mention,difficulty) if autos == 0 else "%s needs %d successes, already has %d automatic and rolls:" % (context.author.mention,difficulty,autos)
     else:
         result = '' if ones <= successes else '*It\'s a botch!* :skull:\n'
@@ -51,12 +53,14 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     successes += autos
     triggers = (roll == 6).sum()
     ones = (roll == 1).sum()
+    rgEmoji = get(context.message.guild.emojis, name="rg") 
+    ggnoEmoji = get(context.message.guild.emojis, name="Getrellno") 
 
     if difficulty:
-        result = ('*Just as planned* <:rg:684046905180684288>\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'        
+        result = (f'*Just as planned* {rgEmoji}\n' if successes >= difficulty else "Failure!\n") if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:716782931045122051>\n'        
         msg = "GG needs %d successes and rolls:" % (difficulty) if autos == 0 else "GG needs %d successes, already had %d cryofreezed and rolls:" % (difficulty,autos)
     else:
-        result = '' if ones <= successes else '*Marauders fucking with my shit again* <:Getrellno:550654128238624768>\n'
+        result = '' if ones <= successes else f'*Marauders fucking with my shit again* {ggnoEmoji}\n'
         msg = "GG had always planned to roll:" if autos == 0 else "GG acquired %d automatic successes back in 2079 and rolls:" % (autos)
     msg+= " \n %s \n %d successes, %d triggers \n %s" % (', '.join(map(str,roll)),
     successes,
