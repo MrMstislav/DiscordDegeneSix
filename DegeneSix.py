@@ -72,6 +72,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     pass_context=False)
 async def degenesix(context):
     msg = "Code available at: https://github.com/MrMstislav/DiscordDegeneSix/\n"
+    msg += "Currently running on " + str(len(list(bot.guilds))) + " Discord guilds.\n"
     await context.send(msg)
     
 # @bot.event
