@@ -116,6 +116,7 @@ def countTriggers(rolls):
 @bot.command(
 	name='verbose',
 	brief='Change the verbosity of the initiative functions',
+	description='Use `!verbose [on/off]` to change the verbosity. If verbose is off, fewer help messages will be printed',
 	pass_context=True)
 async def verbose(context, option:str):
 	global cursor, connection
@@ -143,6 +144,7 @@ async def verbose(context, option:str):
 @bot.command(
 	name='start-initiative',
 	brief='Allow calls for initiative in this channel',
+	description='Use `!start-initiative [label]` where the label is optional to register a game. Stale initiatives will be deleted after 6 weeks.',
 	pass_context=True)
 async def initiativeStart(context, label:str=None):
 	global cursor, connection
@@ -249,6 +251,7 @@ def parseInitiativeAdd(args):
 @bot.command(
 	name='next',
 	brief='Move to the next round of initiative',
+	description='Use `!next` to move to the next turn. At the start of each round, an overview of the turn-order will be printed automatically.',
 	aliases=['next-initiative'],
 	pass_context=True)
 async def initiativeNext(context, *args):
@@ -345,7 +348,7 @@ def sortCharactersBySuccesses(characters):
 @bot.command(
 	name='debugDB',
 	brief='Debug the DB',
-    enabled=True,
+    enabled=False,
 	pass_context=True)
 async def debugDB(context, field:str):
 	global cursor, connection
