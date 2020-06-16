@@ -7,7 +7,6 @@ import datetime
 import math
 from discord.ext.commands import Bot, when_mentioned_or
 
-
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
@@ -180,9 +179,7 @@ async def cleanupDB():
 				cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (id,))
 			connection.commit()
 	except Exception as e:
-        print("Error while cleaning database")
-		print(e)
-
+	    print("Error while cleaning database")
 
 ########################## Add to Initiative ##########################
 @bot.command(
@@ -226,7 +223,7 @@ async def initiativeAdd(context, *args):
 		msg += "Player " + (name if name else context.author.mention) + " was added to the initiative with " + str(dice) + " dice" + ((" and " + str(ego) + " ego") if ego else "")
 		await context.send(msg)
 	except Exception as e:
-		await context.send("An error occurred while adding you to the initiative. Ping <@154353119352848386> for immediate help"")
+		await context.send("An error occurred while adding you to the initiative. Ping <@154353119352848386> for immediate help")
 
 def parseInitiativeAdd(args):
 	try:
@@ -308,7 +305,7 @@ async def initiativeNext(context, *args):
 		# Do the turn
 		cursor.execute("SELECT mention, name, num_ego, num_successes, num_triggers FROM characters WHERE channel_id=? AND num_successes=?", (context.channel.id, cur_initiative))
 		characters = cursor.fetchall()
-		msg += str(cur_initiative) + " successe(s):\n"
+		msg += str(cur_initiative) + " successes\n"
 		for character in characters:
 			msg += character[0] + ", it is " + (character[1] + "\'s turn. " if character[1] else "your turn.")
 			extraActions = math.floor(character[4]/2)
@@ -332,8 +329,7 @@ async def initiativeNext(context, *args):
 		connection.commit()
 
 	except Exception as e:
-		await context.send("An error occurred while moving to next initiative. Ping <@154353119352848386> for immediate help"")
-		await context.send(e)
+		await context.send("An error occurred while moving to next initiative. Ping <@154353119352848386> for immediate help")
 
 
 def sortCharactersBySuccesses(characters):
