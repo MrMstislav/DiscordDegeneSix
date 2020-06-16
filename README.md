@@ -44,7 +44,7 @@ DegeneSix can also manage your initiative.
 3. Use `!next` to start the initiative. At the beginning of each round, an overview of the order will be printed, and the first player's turn will begin. 
 4. Use `!next` again to move to the next player's turn
 
-The Degenesix initiative feature also has a verbosity feature. Use `!verbose [on/off]` to receive fewer messages.
+DegeneSix initiative also has a verbosity feature. Use `!verbose [on/off]` to change the number of messages you receive.
 
 Example:
 ```
