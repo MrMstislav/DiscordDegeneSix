@@ -7,6 +7,11 @@ import datetime
 import math
 from discord.ext.commands import Bot, when_mentioned_or
 
+# Globals
+MAX_EGO = 50
+MAX_DICE = 100
+
+# Setup Bot
 BOT_PREFIX = ("?", "!")
 TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
 
@@ -203,7 +208,10 @@ async def initiativeAdd(context, *args):
 		dice = parsedArgs[1]
 		ego = parsedArgs[2]
 		if (dice < 0 or (ego and ego < 0)):
-			await context.send("Invalid input. Use `!help initiative` for more info.")
+			await context.send("Invalid input: negative numbers are not allowed. Use `!help initiative` for more info.")
+			return
+		if (dive > MAX_DICE or ego > MAX_EGO):
+			await context.send("Invalid input:  Use `!help initiative` for more info.")
 			return
 		# Check that the initiative exists and is open
 		cursor.execute("SELECT label, cur_initiative, verbose FROM initiatives WHERE channel_id=?", (context.channel.id,))
@@ -312,7 +320,7 @@ async def initiativeNext(context, *args):
 		for character in characters:
 			msg += character[0] + ", it is " + (character[1] + "\'s turn. " if character[1] else "your turn.")
 			extraActions = math.floor(character[4]/2)
-			if (extraActions > 0 or (initiative[1] == 1 and character[2])):
+			if (extraActions > 0 or (round_number == 1 and character[2])):
 				msg += " You have "
 			if (extraActions > 0):
 				msg += str(extraActions) + " extra action(s) from triggers"
