@@ -238,7 +238,8 @@ async def initiativeAdd(context, *args):
 			await context.send("Invalid input: negative numbers are not allowed. Use `!help initiative` for more info.")
 			return
 		if (dice > MAX_DICE or (ego and ego > MAX_EGO)):
-			await context.send("Invalid input:  Use `!help initiative` for more info.")
+			msg = "Invalid input: max dice is " + str(MAX_DICE) + " and max ego is " + str(MAX_EGO) + ". Use `!help initiative` for more info.""
+			await context.send(msg)
 			return
 		# Check that the initiative exists and is open
 		cursor.execute("SELECT label, cur_initiative, verbose FROM initiatives WHERE channel_id=?", (context.channel.id,))
