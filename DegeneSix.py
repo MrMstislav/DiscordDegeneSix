@@ -376,22 +376,18 @@ async def initiativeNext(context, *args):
 				msg += str(character[2]) + " extra dice for your first action (from ego)"
 			msg += "\n"
 		await context.send(msg)
-
 		# update the turns number
 		cursor.execute("SELECT MAX(value) FROM initiative_values WHERE value < ?", (cur_initiative,))
 		nextInitiative = cursor.fetchone()
 		cur_initiative = -1 if (nextInitiative[0] is None) else nextInitiative[0]
 		insertionTuple = (context.channel.id, initiative[0], round_number, cur_initiative, initiative[3], datetime.date.today())
 		cursor.execute("REPLACE INTO initiatives(channel_id, label, round_number, cur_initiative, verbose, start_time) VALUES(?,?,?,?,?,?)", insertionTuple)
-
+		connection.commit()
+		# send end-of-round message
 		if (cur_initiative == -1):
 			await context.trigger_typing()
 			msg = "Round " + str(round_number) + " is done. Use `!ego [name]` to update your ego before the next round"
 			await context.send(msg)
-
-
-		connection.commit()
-
 	except Exception as e:
 		await context.send("An error occurred while moving to next initiative. Ping <@154353119352848386> for immediate help")
 
