@@ -210,7 +210,7 @@ async def initiativeAdd(context, *args):
 		if (dice < 0 or (ego and ego < 0)):
 			await context.send("Invalid input: negative numbers are not allowed. Use `!help initiative` for more info.")
 			return
-		if (dive > MAX_DICE or ego > MAX_EGO):
+		if (dice > MAX_DICE or ego > MAX_EGO):
 			await context.send("Invalid input:  Use `!help initiative` for more info.")
 			return
 		# Check that the initiative exists and is open
