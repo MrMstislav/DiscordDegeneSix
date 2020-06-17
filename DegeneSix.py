@@ -161,21 +161,23 @@ async def verbose(context, option:str):
 async def initiativeStart(context, label:str=None):
 	global cursor, connection
 	msg = ""
-	try:
-		async with context.typing():
-			cursor.execute("SELECT label, verbose FROM initiatives WHERE channel_id=?", (context.channel.id,))
-			previousInitiative = cursor.fetchone()
-			if (previousInitiative and len(previousInitiative) > 0):
-				msg += "Deleting previous " + (("initiative \"" + str(previousInitiative[0]) +"\"") if previousInitiative[0] else "initiative") + "...\n"
-			cursor.execute("REPLACE INTO initiatives(channel_id, label, start_time, verbose) VALUES(?,?,?, verbose)", (context.channel.id, label, datetime.date.today(), previousInitiative[1]))
-			cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
-			cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
-			connection.commit()
-			msg += "Initiative " + ("\"" + label + "\" " if label else "") + "started!\nUse `!initiative [name] [dice] [ego]` (name and ego are optional) to join\nType `!next` to start!\n*This is a beta feature. If you find any bugs, please DM <@154353119352848386>*"
-		await context.send(msg)
-		await cleanupDB()
-	except Exception as e:
-		await context.send("Failed to start initiative. Try a different channel, or ping <@154353119352848386> for immediate help")
+	# try:
+	await context.trigger_typing()
+	cursor.execute("SELECT label, verbose FROM initiatives WHERE channel_id=?", (context.channel.id,))
+	previousInitiative = cursor.fetchone()
+	verbose = True
+	if (previousInitiative and len(previousInitiative) > 0):
+		msg += "Deleting previous " + (("initiative \"" + str(previousInitiative[0]) +"\"") if previousInitiative[0] else "initiative") + "...\n"
+		verbose = previousInitiative[1]
+	cursor.execute("REPLACE INTO initiatives(channel_id, label, start_time, verbose) VALUES(?,?,?,?)", (context.channel.id, label, datetime.date.today(), int(verbose)))
+	cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
+	cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
+	connection.commit()
+	msg += "Initiative " + ("\"" + label + "\" " if label else "") + "started!\nUse `!initiative [name] [dice] [ego]` (name and ego are optional) to join\nType `!next` to start!\n*This is a beta feature. If you find any bugs, please DM <@154353119352848386>*"
+	await context.send(msg)
+	await cleanupDB()
+	# except Exception as e:
+	# 	await context.send("Failed to start initiative. Try a different channel, or ping <@154353119352848386> for immediate help")
 
 async def cleanupDB():
 	global cursor, connection
