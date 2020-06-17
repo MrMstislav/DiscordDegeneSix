@@ -300,6 +300,54 @@ def parseInitiativeAdd(args):
 	except:
 		return None
 
+########################## Ego ##########################
+@bot.command(
+	name='ego',
+	brief='Add yourself to the initiative',
+	description='Use `!ego [name] [ego]` where the name exactly matches your character\'s name (can be blank) to add ego to your next initiative round.',
+	aliases=['ego-initiative', 'add-ego'],
+	commands_heading='initiative',
+	pass_context=True)
+async def initiativeAdd(context, *args):
+	global connection, cursor
+	try:
+		await context.trigger_typing()
+		# Check their input
+		parsedArgs = parseEgoArgs(args)
+		if (not parsedArgs):
+			await context.send("Invalid input. Use '!help ego' for more info.")
+		name = parsedArgs[0]
+		ego = parsedArgs[1]
+		# Grab their original character
+		cursor.execute("SELECT * FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
+		character = cursor.fetchone()
+		if (not character or len(characters) is 0):
+			msg = "You do not have a character " + (("named " + name) if name else context.author.mention)
+			await context.send(msg)
+			return
+		# Insert
+		insertionTuple = (character[0], character[1], character[2], character[3], ego, character[5], character[6], character[7])
+		cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego, num_successes, num_triggers, num_ones) VALUES(?,?,?,?,?)", (insertionTuple))
+		connection.commit()
+		# Send message
+		msg = (("Character \"" + name + "\"") if name else context.author.display_name) + "\'s ego has been updated to " + str(ego)
+		await context.send()
+	except Exception as e:
+		await context.send("There was an error while adding your ego. Ping <@154353119352848386> for immediate help")
+
+def parseEgoArgs(args):
+	try:
+		try:
+			ego = int(args[1])
+			name = args[0] if args[0] else ""
+		except:
+			ego = int(args[0])
+			name = ""
+		return [name, ego]
+	except:
+		return None
+
+
 ########################## Moving between turns ##########################
 @bot.command(
 	name='next',
@@ -348,7 +396,7 @@ async def initiativeNext(context, *args):
 					cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego, num_successes, num_triggers, num_ones) VALUES(?,?,?,?,?,?,?,?)", insertionTuple)
 			connection.commit()
 			# Print the overview
-			msg += "Initiative order:\n"
+			msg += "Initiative order by successes:\n"
 			for val in reversed(range(cur_initiative+1)):
 				if (val in successDict):
 					names = []
@@ -360,7 +408,7 @@ async def initiativeNext(context, *args):
 			await context.trigger_typing()
 
 		# Do the turn
-		cursor.execute("SELECT mention, name, num_ego, num_successes, num_triggers FROM characters WHERE channel_id=? AND num_successes=?", (context.channel.id, cur_initiative))
+		cursor.execute("SELECT mention, name, num_ego, num_successes, num_triggers, num_dice, num_ones FROM characters WHERE channel_id=? AND num_successes=?", (context.channel.id, cur_initiative))
 		characters = cursor.fetchall()
 		msg += str(cur_initiative) + " successes\n"
 		for character in characters:
@@ -370,10 +418,13 @@ async def initiativeNext(context, *args):
 				msg += " You have "
 			if (extraActions > 0):
 				msg += str(extraActions) + " extra action(s) from triggers"
-			if (extraActions > 0 and round_number == 1 and character[2]):
+			if (extraActions > 0 and character[2]):
 				msg += " and "
-			if (round_number == 1 and character[2]):
+			if (character[2]):
 				msg += str(character[2]) + " extra dice for your first action (from ego)"
+				# reset their ego
+				insertionTuple = (context.channel.id, character[0], character[1], character[5], 0, character[3], character[4], character[6])
+				cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego, num_successes, num_triggers, num_ones) VALUES(?,?,?,?,?,?,?,?)", insertionTuple)
 			msg += "\n"
 		await context.send(msg)
 		# update the turns number
