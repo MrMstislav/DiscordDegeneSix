@@ -189,6 +189,32 @@ async def cleanupDB():
 	except Exception as e:
 	    print("Error while cleaning database")
 
+########################## End Initiative ##########################
+@bot.command(
+	name='end-initiative',
+	brief='Remove the active initiative in this channel',
+	description='Use `!end-initiative` to remove this channel\'s initiative. Note: start-initiative also deletes the previous initiative.',
+	pass_context=True)
+async def initiativeStart(context, label:str=None):
+	global cursor, connection
+	msg = "Deleted initiative \""
+	try:
+		async with context.typing():
+			cursor.execute("SELECT label FROM initiatives WHERE channel_id=?", (context.channel.id,))
+			previousInitiative = cursor.fetchone()
+			if (previousInitiative and len(previousInitiative) > 0):
+				msg += previousInitiative[0] + "\""
+			else:
+				await context.send("This channel has no active initiative.")
+				return
+			cursor.execute("DELETE FROM initiatives WHERE channel_id=?", (context.channel.id,))
+			cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
+			cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
+			connection.commit()
+		await context.send(msg)
+	except Exception as e:
+		await context.send("Failed to delete initiative. Try a different channel, or ping <@154353119352848386> for immediate help")
+
 ########################## Add to Initiative ##########################
 @bot.command(
 	name='initiative',
