@@ -207,7 +207,7 @@ async def initiativeEnd(context, label:str=None):
 	global cursor, connection
 	msg = "Deleted initiative \""
 	try:
-		async context.trigger_typing():
+		await context.trigger_typing()
 		cursor.execute("SELECT label FROM initiatives WHERE channel_id=?", (context.channel.id,))
 		previousInitiative = cursor.fetchone()
 		if (previousInitiative and len(previousInitiative) > 0):
