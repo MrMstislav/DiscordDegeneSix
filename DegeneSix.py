@@ -308,7 +308,7 @@ def parseInitiativeAdd(args):
 	aliases=['ego-initiative', 'add-ego'],
 	commands_heading='initiative',
 	pass_context=True)
-async def initiativeAdd(context, *args):
+async def initiativeEgo(context, *args):
 	global connection, cursor
 	try:
 		await context.trigger_typing()
