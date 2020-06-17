@@ -250,18 +250,25 @@ async def initiativeAdd(context, *args):
 		if (initiative[1] >= 0):
 			msg += "The initiative in this channel has already started. You will join at the beginning of the next round\n"
 		# Check if the player is already in that initiative
-		cursor.execute("SELECT name FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
+		cursor.execute("SELECT name FROM characters WHERE channel_id=? AND mention=?", (context.channel.id, context.author.mention))
 		characters = cursor.fetchall()
-		if (len(characters) > 0):
+		if (checkDuplicates(characters, name)):
 			if (not bool(initiative[2])):
-				msg += (name if name else context.author.display_name) + " was already in the initiative. Overwriting...\n"
+				msg += (("Character \"" + name + "\"") if name else context.author.display_name) + " was already in the initiative. Overwriting...\n"
 		# Add them and send message
 		cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego) VALUES(?,?,?,?,?)", (context.channel.id, context.author.mention, name, dice, ego))
 		connection.commit()
-		msg += "Player " + (name if name else context.author.mention) + " was added to the initiative with " + str(dice) + " dice" + ((" and " + str(ego) + " ego") if ego else "")
+		msg += (("Character \"" + name + "\"") if name else context.author.mention) + " was added to the initiative with " + str(dice) + " dice" + ((" and " + str(ego) + " ego") if ego else "")
 		await context.send(msg)
 	except Exception as e:
 		await context.send("An error occurred while adding you to the initiative. Ping <@154353119352848386> for immediate help")
+
+def checkDuplicates(characters, name):
+	name = "" if None else name
+	for characterName in characters:
+		if (characterName == name):
+			return True
+	return False
 
 def parseInitiativeAdd(args):
 	try:
