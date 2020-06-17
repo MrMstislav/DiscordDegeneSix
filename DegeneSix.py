@@ -34,6 +34,7 @@ except Exception as e:
     description="Rolls a Degenesis dice pool.",
     brief="Sacrifice everything",
     aliases=['D6', '6pool','roll','dee6'],
+	commands_heading='Dice',
     pass_context=True)
 async def degenesix(context,actionNumber:int,difficulty=0):
     autos = 0 if actionNumber < 13 else actionNumber-12
@@ -61,6 +62,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     description="Rolls a hacked Degenesis dice pool.",
     brief="I am the creator.",
     aliases=['GeeGee6','GeromeGetroll'],
+	commands_heading='Dice',
     pass_context=True)
 async def degenesix(context,actionNumber:int,difficulty=0):
     autos = 0 if actionNumber < 13 else actionNumber-12
@@ -88,6 +90,7 @@ async def degenesix(context,actionNumber:int,difficulty=0):
     description="Developer Information",
     brief="Code availability",
     aliases=['DI'],
+	commands_heading='Dev',
     pass_context=False)
 async def degenesix(context):
     msg = "Code available at: https://github.com/MrMstislav/DiscordDegeneSix/\n"
@@ -123,6 +126,7 @@ def countTriggers(rolls):
 	name='verbose',
 	brief='Change the verbosity of the initiative functions',
 	description='Use `!verbose [on/off]` to change the verbosity. If verbose is off, fewer help messages will be printed',
+	commands_heading='initiative',
 	pass_context=True)
 async def verbose(context, option:str):
 	global cursor, connection
@@ -151,6 +155,8 @@ async def verbose(context, option:str):
 	name='start-initiative',
 	brief='Allow calls for initiative in this channel',
 	description='Use `!start-initiative [label]` where the label is optional to register a game. Stale initiatives will be deleted after 6 weeks.',
+	aliases=['start', 'begin', 'begin-initiative'],
+	commands_heading='initiative',
 	pass_context=True)
 async def initiativeStart(context, label:str=None):
 	global cursor, connection
@@ -194,6 +200,8 @@ async def cleanupDB():
 	name='end-initiative',
 	brief='Remove the active initiative in this channel',
 	description='Use `!end-initiative` to remove this channel\'s initiative. Note: start-initiative also deletes the previous initiative.',
+	aliases=['end', 'stop-initiative', 'stop'],
+	commands_heading='initiative',
 	pass_context=True)
 async def initiativeStart(context, label:str=None):
 	global cursor, connection
@@ -220,6 +228,8 @@ async def initiativeStart(context, label:str=None):
 	name='initiative',
 	brief='Add yourself to the initiative',
 	description='Use `!initiative [name] [dice] [ego]` to add yourself to this channel\'s initiative (name and ego are optional)',
+	aliases=['register'],
+	commands_heading='initiative',
 	pass_context=True)
 async def initiativeAdd(context, *args):
 	global cursor, connection
@@ -296,6 +306,7 @@ def parseInitiativeAdd(args):
 	brief='Move to the next round of initiative',
 	description='Use `!next` to move to the next turn. At the start of each round, an overview of the turn-order will be printed automatically.',
 	aliases=['next-initiative'],
+	commands_heading='initiative',
 	pass_context=True)
 async def initiativeNext(context, *args):
 	global cursor, connection
@@ -391,6 +402,7 @@ def sortCharactersBySuccesses(characters):
 @bot.command(
 	name='debugDB',
 	brief='Debug the DB',
+	commands_heading='Dev',
     enabled=False,
 	pass_context=True)
 async def debugDB(context, field:str):
