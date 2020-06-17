@@ -203,7 +203,7 @@ async def cleanupDB():
 	aliases=['end', 'stop-initiative', 'stop'],
 	commands_heading='initiative',
 	pass_context=True)
-async def initiativeStart(context, label:str=None):
+async def initiativeEnd(context, label:str=None):
 	global cursor, connection
 	msg = "Deleted initiative \""
 	try:
@@ -347,6 +347,30 @@ def parseEgoArgs(args):
 	except:
 		return None
 
+########################## Kill ##########################
+@bot.command(
+	name='kill',
+	brief='Add yourself to the initiative',
+	description='Use `!kill [name]`` where the name exactly matches your character\'s name (can be blank) to add remove that character from the initiative.',
+	aliases=['kill-initiative', 'remove-initiative', 'remove'],
+	commands_heading='initiative',
+	pass_context=True)
+async def initiativeKill(context, name:str=None):
+	global cursor, connection
+	try:
+		await context.trigger_typing()
+		name = name if name else ""
+		cursor.execute("SELECT * FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
+		character = cursor.fetchone()
+		if (not character or len(character) == 0):
+			msg = "You do not have a character " + (("named " + name) if name else context.author.mention)
+			await context.send(msg)
+			return
+		cursor.execute("DELETE FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
+		msg = (("Character \"" + name + "\"") if name else context.author.display_name) + " has been removed from the initiative"
+		await context.send(msg)
+	except Exception as e:
+		await context.send("There was an error while adding removing your character. Ping <@154353119352848386> for immediate help")
 
 ########################## Moving between turns ##########################
 @bot.command(
