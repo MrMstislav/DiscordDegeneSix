@@ -200,25 +200,25 @@ async def cleanupDB():
 	name='end-initiative',
 	brief='Remove the active initiative in this channel',
 	description='Use `!end-initiative` to remove this channel\'s initiative. Note: start-initiative also deletes the previous initiative.',
-	aliases=['end', 'stop-initiative', 'stop'],
+	aliases=['end', 'stop-initiative', 'stop', 'delete-initiative'],
 	commands_heading='initiative',
 	pass_context=True)
 async def initiativeEnd(context, label:str=None):
 	global cursor, connection
 	msg = "Deleted initiative \""
 	try:
-		async with context.typing():
-			cursor.execute("SELECT label FROM initiatives WHERE channel_id=?", (context.channel.id,))
-			previousInitiative = cursor.fetchone()
-			if (previousInitiative and len(previousInitiative) > 0):
-				msg += previousInitiative[0] + "\""
-			else:
-				await context.send("This channel has no active initiative.")
-				return
-			cursor.execute("DELETE FROM initiatives WHERE channel_id=?", (context.channel.id,))
-			cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
-			cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
-			connection.commit()
+		async context.trigger_typing():
+		cursor.execute("SELECT label FROM initiatives WHERE channel_id=?", (context.channel.id,))
+		previousInitiative = cursor.fetchone()
+		if (previousInitiative and len(previousInitiative) > 0):
+			msg += previousInitiative[0] + "\""
+		else:
+			await context.send("This channel has no active initiative.")
+			return
+		cursor.execute("DELETE FROM initiatives WHERE channel_id=?", (context.channel.id,))
+		cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
+		cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
+		connection.commit()
 		await context.send(msg)
 	except Exception as e:
 		await context.send("Failed to delete initiative. Try a different channel, or ping <@154353119352848386> for immediate help")
@@ -248,7 +248,7 @@ async def initiativeAdd(context, *args):
 			await context.send("Invalid input: negative numbers are not allowed. Use `!help initiative` for more info.")
 			return
 		if (dice > MAX_DICE or (ego and ego > MAX_EGO)):
-			msg = "Invalid input: max dice is " + str(MAX_DICE) + " and max ego is " + str(MAX_EGO) + ". Use `!help initiative` for more info.""
+			msg = "Invalid input: max dice is " + str(MAX_DICE) + " and max ego is " + str(MAX_EGO) + ". Use `!help initiative` for more info."
 			await context.send(msg)
 			return
 		# Check that the initiative exists and is open
@@ -321,7 +321,7 @@ async def initiativeEgo(context, *args):
 		# Grab their original character
 		cursor.execute("SELECT * FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
 		character = cursor.fetchone()
-		if (not character or len(characters) is 0):
+		if (not character or len(characters) == 0):
 			msg = "You do not have a character " + (("named " + name) if name else context.author.mention)
 			await context.send(msg)
 			return
@@ -352,7 +352,6 @@ def parseEgoArgs(args):
 	name='kill',
 	brief='Add yourself to the initiative',
 	description='Use `!kill [name]`` where the name exactly matches your character\'s name (can be blank) to add remove that character from the initiative.',
-	aliases=['kill-initiative', 'remove-initiative', 'remove'],
 	commands_heading='initiative',
 	pass_context=True)
 async def initiativeKill(context, name:str=None):
