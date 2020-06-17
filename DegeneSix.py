@@ -157,11 +157,11 @@ async def initiativeStart(context, label:str=None):
 	msg = ""
 	try:
 		async with context.typing():
-			cursor.execute("SELECT label FROM initiatives WHERE channel_id=?", (context.channel.id,))
+			cursor.execute("SELECT label, verbose FROM initiatives WHERE channel_id=?", (context.channel.id,))
 			previousInitiative = cursor.fetchone()
 			if (previousInitiative and len(previousInitiative) > 0):
 				msg += "Deleting previous " + (("initiative \"" + str(previousInitiative[0]) +"\"") if previousInitiative[0] else "initiative") + "...\n"
-			cursor.execute("REPLACE INTO initiatives(channel_id, label, start_time) VALUES(?,?,?)", (context.channel.id, label, datetime.date.today()))
+			cursor.execute("REPLACE INTO initiatives(channel_id, label, start_time, verbose) VALUES(?,?,?, verbose)", (context.channel.id, label, datetime.date.today(), previousInitiative[1]))
 			cursor.execute("DELETE FROM characters WHERE channel_id=?", (context.channel.id,))
 			cursor.execute("DELETE FROM initiative_values WHERE channel_id=?", (context.channel.id,))
 			connection.commit()
