@@ -133,9 +133,9 @@ async def verbose(context, option:str):
 	try:
 		await context.trigger_typing()
 		if (option.lower() == "on"):
-			choice = False
-		elif(option.lower() == "off"):
 			choice = True
+		elif(option.lower() == "off"):
+			choice = False
 		else:
 			await context.send("Please use `on` or `off`")
 			return
@@ -265,8 +265,8 @@ async def initiativeAdd(context, *args):
 		cursor.execute("SELECT name FROM characters WHERE channel_id=? AND mention=?", (context.channel.id, context.author.mention))
 		characters = cursor.fetchall()
 		if (checkDuplicates(characters, name)):
-			if (not bool(initiative[2])):
-				msg += (("Character \"" + name + "\"") if name else context.author.display_name) + " was already in the initiative. Overwriting...\n"
+			if (bool(initiative[2])): #verbose
+				msg += "Duplicate character, overwriting...\n"
 		# Add them and send message
 		cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego) VALUES(?,?,?,?,?)", (context.channel.id, context.author.mention, name, dice, ego))
 		connection.commit()
@@ -276,9 +276,9 @@ async def initiativeAdd(context, *args):
 		await context.send("An error occurred while adding you to the initiative. Ping <@154353119352848386> for immediate help")
 
 def checkDuplicates(characters, name):
-	name = "" if None else name
+	name = name if name else ""
 	for characterName in characters:
-		if (characterName == name):
+		if (characterName[0] == name):
 			return True
 	return False
 
@@ -312,38 +312,38 @@ def parseInitiativeAdd(args):
 	pass_context=True)
 async def initiativeEgo(context, *args):
 	global connection, cursor
-	# try:
-	await context.trigger_typing()
-	# Check their input
-	parsedArgs = parseEgoArgs(args)
-	if (not parsedArgs):
-		await context.send("Invalid input. Use '!help ego' for more info.")
-		return
-	name = parsedArgs[0]
-	ego = parsedArgs[1]
-	if (ego < 0):
-		await context.send("Invalid input: ego must not be negative. Use '!help ego' for more info.")
-		return
-	if (ego > MAX_EGO):
-		msg = "Invalid input: ego must be less than " + str(MAX_EGO) + ". Use '!help ego' for more info."
+	try:
+		await context.trigger_typing()
+		# Check their input
+		parsedArgs = parseEgoArgs(args)
+		if (not parsedArgs):
+			await context.send("Invalid input. Use '!help ego' for more info.")
+			return
+		name = parsedArgs[0]
+		ego = parsedArgs[1]
+		if (ego < 0):
+			await context.send("Invalid input: ego must not be negative. Use '!help ego' for more info.")
+			return
+		if (ego > MAX_EGO):
+			msg = "Invalid input: ego must be less than " + str(MAX_EGO) + ". Use '!help ego' for more info."
+			await context.send(msg)
+			return
+		# Grab their original character
+		cursor.execute("SELECT * FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
+		character = cursor.fetchone()
+		if (not character or len(character) == 0):
+			msg = "You do not have a character " + (("named " + name + ", ") if name else "without a name, ") + context.author.mention
+			await context.send(msg)
+			return
+		# Insert
+		insertionTuple = (character[0], character[1], character[2], character[3], ego, character[5], character[6], character[7])
+		cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego, num_successes, num_triggers, num_ones) VALUES(?,?,?,?,?,?,?,?)", (insertionTuple))
+		connection.commit()
+		# Send message
+		msg = (("Character \"" + name + "\"") if name else context.author.display_name) + "\'s ego has been updated to " + str(ego)
 		await context.send(msg)
-		return
-	# Grab their original character
-	cursor.execute("SELECT * FROM characters WHERE channel_id=? AND mention=? AND name=?", (context.channel.id, context.author.mention, name))
-	character = cursor.fetchone()
-	if (not character or len(character) == 0):
-		msg = "You do not have a character " + (("named " + name + ", ") if name else "without a name, ") + context.author.mention
-		await context.send(msg)
-		return
-	# Insert
-	insertionTuple = (character[0], character[1], character[2], character[3], ego, character[5], character[6], character[7])
-	cursor.execute("REPLACE INTO characters(channel_id, mention, name, num_dice, num_ego, num_successes, num_triggers, num_ones) VALUES(?,?,?,?,?,?,?,?)", (insertionTuple))
-	connection.commit()
-	# Send message
-	msg = (("Character \"" + name + "\"") if name else context.author.display_name) + "\'s ego has been updated to " + str(ego)
-	await context.send(msg)
-	# except Exception as e:
-	# 	await context.send("There was an error while adding your ego. Ping <@154353119352848386> for immediate help")
+	except Exception as e:
+		await context.send("There was an error while adding your ego. Ping <@154353119352848386> for immediate help")
 
 def parseEgoArgs(args):
 	try:
