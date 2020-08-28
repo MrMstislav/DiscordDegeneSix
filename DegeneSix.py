@@ -5,6 +5,7 @@ import discord
 import sqlite3
 import datetime
 import math
+from dotenv import load_dotenv
 from discord.ext.commands import Bot, when_mentioned_or
 
 # Globals
@@ -12,8 +13,9 @@ MAX_EGO = 50
 MAX_DICE = 100
 
 # Setup Bot
-BOT_PREFIX = ("?", "!")
-TOKEN = os.environ.get('ACCESS_TOKEN') # Get at discordapp.com/developers/applications/me
+load_dotenv()
+BOT_PREFIX = os.getenv("DISCORD_BOT_PREFIX")
+TOKEN = os.getenv("DISCORD_TOKEN") # Get at discordapp.com/developers/applications/me
 
 bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX))
 

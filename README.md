@@ -1,5 +1,24 @@
-**DegeneSix**
+# DegeneSix
 KatharSys die pool roller bot.
+
+### `.env` file
+Create a `.env` file in the root of the project, this allows you to change the prefix of the box and contains the token from Discord
+````.env
+DISCORD_BOT_PREFIX=!,?
+DISCORD_TOKEN=AAAAAAAAAAA.11111111111111111111
+````
+
+### Docker
+You don't need to install Python in your local or a host machine, a `docker-compose.yml` to build and run a container with the bot is in place, open a terminal and type
+```bash
+docker-compose up [-d]
+```
+Use the `-d` flag to run the bot in detached mode.
+
+When you want stop the bot for whatever reason just type
+```bash
+docker-compose down
+```
 
 ## Dice Rolling
 Can be invoked with only the action number
