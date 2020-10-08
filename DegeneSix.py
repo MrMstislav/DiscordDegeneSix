@@ -215,10 +215,9 @@ def check(action_number: int, difficulty=0, auto_triggers=0):
     autos = 0 if action_number < 13 else action_number - 12
     action_number = 12 if action_number > 13 else action_number
     dice_roll = np.random.choice([1, 2, 3, 4, 5, 6], action_number)
-    successes = (dice_roll > 3).sum()
-    successes += autos
-    triggers = (dice_roll == 6).sum() + auto_triggers
-    ones = (dice_roll == 1).sum()
+    ones = countOnes(dice_roll).item()
+    successes = countSuccesses(dice_roll).item() + autos
+    triggers = countTriggers(dice_roll).item() + auto_triggers
 
     is_success = successes >= difficulty
     is_not_botch = True if is_success else ones <= successes
