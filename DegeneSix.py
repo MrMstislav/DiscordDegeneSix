@@ -35,12 +35,12 @@ except Exception as e:
     name='Degene6',
     description="Rolls a Degenesis dice pool.",
     brief="Sacrifice everything",
-    aliases=['D6', '6pool', 'roll', 'dee6'],
+    aliases=['D6', '6pool', 'roll', 'dee6', 'dg', 'r'],
     pass_context=True)
 async def degenesix(context, action_number: int, difficulty=0, auto_triggers=0):
     result_check = check(action_number, difficulty, auto_triggers)
     is_success = result_check['is_success']
-    is_botch = result_check['is_botch']
+    is_not_botch = result_check['is_not_botch']
     results = result_check['results']
     successes = result_check['successes']
     triggers = result_check['triggers']
@@ -52,12 +52,12 @@ async def degenesix(context, action_number: int, difficulty=0, auto_triggers=0):
     mention = context.author.mention
     added_triggers = '(**%d** automatic)' % auto_triggers if auto_triggers > 0 else ''
     if difficulty:
-        result = (success_message if is_success else failure_message) if is_botch else botch_message
+        result = (success_message if is_success else failure_message) if is_not_botch else botch_message
         msg = "%s needs %d successes and rolls:" % (
             mention, difficulty) if autos == 0 else "%s needs %d successes, already has %d automatic and rolls:" % (
             mention, difficulty, autos)
     else:
-        result = '' if is_botch else botch_message
+        result = '' if is_not_botch else botch_message
         msg = "%s rolls:" % mention if autos == 0 else "%s has %d automatic successes and rolls:" % (mention, autos)
     msg += " %s \n **%d** successes, **%d** triggers %s \n %s " % (', '.join(map(str, results)),
                                                                    successes,
@@ -68,15 +68,15 @@ async def degenesix(context, action_number: int, difficulty=0, auto_triggers=0):
 
 
 @bot.command(
-    name='Degene6check',
-    description="Makes a check of a Degenesis dice pool.",
-    brief="Sacrifice everything",
-    aliases=['check'],
+    name='Check',
+    description="Makes a check of a Degenesis dice pool. The ability name is required!",
+    brief="Checks an ability",
+    aliases=['check', 'ch'],
     pass_context=True)
-async def degenesix(context, ability: str, action_number: int, difficulty=0, auto_triggers=0):
+async def degenesix(context, ability, action_number: int, difficulty=0, auto_triggers=0):
     result_check = check(action_number, difficulty, auto_triggers)
     is_success = result_check['is_success']
-    is_botch = result_check['is_botch']
+    is_not_botch = result_check['is_not_botch']
     results = result_check['results']
     successes = result_check['successes']
     triggers = result_check['triggers']
@@ -89,13 +89,13 @@ async def degenesix(context, ability: str, action_number: int, difficulty=0, aut
     added_triggers = '(**%d** automatic)' % auto_triggers if auto_triggers > 0 else ''
     ability = ability.capitalize()
     if difficulty:
-        result = (success_message if is_success else failure_message) if is_botch else botch_message
+        result = (success_message if is_success else failure_message) if is_not_botch else botch_message
         msg = "%s makes a %s check, needs %d successes and rolls:" % (
             mention, ability,
             difficulty) if autos == 0 else "%s needs %d successes for a %s check, already has %d automatic and rolls:" % (
             mention, difficulty, ability, autos)
     else:
-        result = '' if is_botch else botch_message
+        result = '' if is_not_botch else botch_message
         msg = "%s makes a %s check:" % (
             mention, ability) if autos == 0 else "%s has %d automatic successes for a %s check and rolls:" % (
             mention, autos, ability)
@@ -108,15 +108,15 @@ async def degenesix(context, ability: str, action_number: int, difficulty=0, aut
 
 
 @bot.command(
-    name='Degene6combi',
+    name='Combi',
     description="Makes a combination check of a Degenesis dice pool.",
-    brief="Sacrifice everything",
-    aliases=['combi', 'combination'],
+    brief="Combination check",
+    aliases=['combi', 'combination', 'co'],
     pass_context=True)
 async def degenesix(context, a_n_1: int, diff_1: int, a_n_2: int, diff_2=0, auto_triggers=0):
     result_1_check = check(a_n_1, diff_1)
     is_success_1 = result_1_check['is_success']
-    is_botch_1 = result_1_check['is_botch']
+    is_not_botch_1 = result_1_check['is_not_botch']
     results_1 = result_1_check['results']
     successes_1 = result_1_check['successes']
     triggers_1 = result_1_check['triggers']
@@ -130,7 +130,7 @@ async def degenesix(context, a_n_1: int, diff_1: int, a_n_2: int, diff_2=0, auto
     if is_success_1:
         result_2_check = check(a_n_2, diff_2, triggers_1 + auto_triggers)
         is_success_2 = result_2_check['is_success']
-        is_botch_2 = result_2_check['is_botch']
+        is_not_botch_2 = result_2_check['is_not_botch']
         results_2 = result_2_check['results']
         successes_2 = result_2_check['successes']
         triggers_2 = result_2_check['triggers']
@@ -138,25 +138,30 @@ async def degenesix(context, a_n_1: int, diff_1: int, a_n_2: int, diff_2=0, auto
 
         added_triggers = '(**%d** automatic)' % auto_triggers if auto_triggers > 0 else ''
 
-        result = (success_message if is_success_2 else failure_message) if is_botch_2 else botch_message
-        msg = "%s makes a combination check, needs %d successes and rolls:" % (
-            mention,
-            diff_2) if autos_2 == 0 else "%s needs %d successes for a combination check, already has %d " \
-                                         "automatic and rolls:" % (mention, diff_2, autos_2)
+        result = (success_message if is_success_2 else failure_message) if is_not_botch_2 else botch_message
+        msg = "%s makes a combination check, passes the 1º (adds %d triggers), needs %d successes " \
+              "and rolls:" % (
+                  mention,
+                  triggers_1,
+                  diff_2) if autos_2 == 0 else "%s needs %d successes for a combination check. Passes the 1º " \
+                                               "with %d triggers, already has %d automatic and rolls:" % (
+                                               mention, diff_2, triggers_1, autos_2)
 
-        msg += " %s and %s, \n **%d** successes, **%d** triggers %s \n %s " % (', '.join(map(str, results_1)),
-                                                                               ', '.join(map(str, results_2)),
-                                                                               successes_2,
-                                                                               triggers_2,
-                                                                               added_triggers,
-                                                                               result)
+        msg += " (%s) and (%s), \n **%d** successes, **%d** triggers %s \n %s " % (', '.join(map(str, results_1)),
+                                                                                   ', '.join(map(str, results_2)),
+                                                                                   successes_2,
+                                                                                   triggers_2,
+                                                                                   added_triggers,
+                                                                                   result)
     else:
-        msg = "%s makes a combination check, needs %d successes and rolls: " % (
+        msg = "%s makes a combination check, needs %d successes for the 1º and rolls: " % (
             mention,
-            diff_1) if autos_1 == 0 else "%s needs %d successes for a combination check, already has %d " \
-                                         "automatic and rolls:" % (mention, diff_1, autos_1)
-        msg += "%s \n" % ', '.join(map(str, results_1))
-        msg += botch_message if is_botch_1 else failure_message
+            diff_1) if autos_1 == 0 else "%s needs %d successes for the 1º check of a combination, already " \
+                                         "has %d automatic and rolls:" % (mention, diff_1, autos_1)
+        msg += "%s \n **%d** successes, **%d** triggers \n " % (', '.join(map(str, results_1)),
+                                                                successes_1,
+                                                                triggers_1)
+        msg += failure_message if is_not_botch_1 else botch_message
 
     await context.send(msg)
 
@@ -216,12 +221,12 @@ def check(action_number: int, difficulty=0, auto_triggers=0):
     ones = (dice_roll == 1).sum()
 
     is_success = successes >= difficulty
-    is_botch = (not is_success and ones <= successes)
+    is_not_botch = True if is_success else ones <= successes
 
     return {
         "results": dice_roll,
-        "is_success": successes >= difficulty,
-        "is_botch": is_botch,
+        "is_success": is_success,
+        "is_not_botch": is_not_botch,
         "successes": successes,
         "triggers": triggers,
         "autos": autos
