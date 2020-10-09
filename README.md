@@ -2,7 +2,7 @@
 KatharSys die pool roller bot.
 
 ### `.env` file
-Create a `.env` file in the root of the project, this allows you to change the prefix of the box and contains the token from Discord
+Create a `.env` file in the root of the project, this allows you to change the prefix of the bot and contains the token from Discord
 ````.env
 DISCORD_BOT_PREFIX=!,?
 DISCORD_TOKEN=AAAAAAAAAAA.11111111111111111111
