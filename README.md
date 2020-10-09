@@ -21,20 +21,20 @@ docker-compose down
 ```
 
 ## Dice Rolling
+
+### Roll
 Can be invoked with only the action number
 ```
 !roll 8
 
-@Pabruva rolls: 
- 3, 1, 6, 5, 6, 2, 6, 5 
- 5 successes, 3 triggers
+@Pabruva rolls: 3, 1, 6, 5, 6, 2, 6, 5 
+5 successes, 3 triggers
 ```
 or the action number and the difficulty, separated by a space:
 ```
 !roll 9 3
 
-@Pabruva needs 3 successes and rolls: 
- 6, 5, 1, 3, 4, 4, 2, 6, 5 
+@Pabruva needs 3 successes and rolls: 6, 5, 1, 3, 4, 4, 2, 6, 5 
  6 successes, 2 triggers 
  Success!
 ```
@@ -42,8 +42,7 @@ Counts successes, triggers and checks for botches:
 ```
 !roll 3
 
-@Pabruva rolls: 
- 1, 1, 2 
+@Pabruva rolls: 1, 1, 2 
  0 successes, 0 triggers 
  It's a botch!
 ```
@@ -51,9 +50,37 @@ Limits pool to 12 and adds any extra as auto-successes:
 ```
 !roll 24
 
-@Pabruva rolls: 
- 6, 5, 5, 1, 6, 6, 3, 3, 1, 6, 4, 6 
+@Pabruva rolls: 6, 5, 5, 1, 6, 6, 3, 3, 1, 6, 4, 6 
  20 successes, 5 triggers
+```
+You can also add automatic triggers:
+```
+!roll 4 4 2
+
+@Nmarin needs 4 successes and rolls: 3, 3, 6, 1, 4
+ 2 successes, 3 triggers (2 automatic)
+ Failure! :x:
+```
+
+### Check
+It behaves like a roll, but you can also add the ability name. It also makes use of automatic triggers:
+```
+!check body 4 1 1
+
+@Nmarin makes a Body check, needs 1 successes and rolls: 6, 4, 4, 2 
+ 3 successes, 2 triggers (1 automatic) 
+ Success! :o:
+```
+
+### Combination
+A combination roll of two different abilities. It also makes use of automatic triggers:
+```
+!combi 4 1 4 1 2
+
+@Nmarin makes a combination check, passes the 1º (adds 2 triggers), needs 1 successes for the 2º and rolls: (6, 6, 5, 3) and (2, 6, 6, 2), 
+ 2 successes, 6 triggers (2 automatic) 
+ Success! :o:
+
 ```
 
 ## Initiative
