@@ -1,12 +1,11 @@
-# Work with Python 3.6
-import numpy as np
-import os
-import discord
-import sqlite3
 import datetime
 import math
-from dotenv import load_dotenv
+import os
+import sqlite3
+
+import numpy as np
 from discord.ext.commands import Bot, when_mentioned_or
+from dotenv import load_dotenv
 
 # Globals
 MAX_EGO = 50
