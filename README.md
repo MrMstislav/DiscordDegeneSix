@@ -2,20 +2,20 @@
 KatharSys die pool roller bot.
 
 ### `.env` file
-Create a `.env` file in the root of the project, this allows you to change the prefix of the box and contains the token from Discord
+Create a `.env` file in the root of the project, this allows you to change the prefix of the bot and contains the token from Discord
 ````.env
 DISCORD_BOT_PREFIX=!,?
 DISCORD_TOKEN=AAAAAAAAAAA.11111111111111111111
 ````
 
 ### Docker
-You don't need to install Python in your local or a host machine, a `docker-compose.yml` to build and run a container with the bot is in place, open a terminal and type
+You don't need to install Python in your local or host machine, a `docker-compose.yml` to build and run a container with the bot is in place, open a terminal and type
 ```bash
-docker-compose up [-d]
+docker-compose up -d
 ```
-Use the `-d` flag to run the bot in detached mode.
+The `-d` flag to run the bot in detached mode, this will let you close the terminal.
 
-When you want stop the bot for whatever reason just type
+Whenever you want stop the bot, type:
 ```bash
 docker-compose down
 ```
