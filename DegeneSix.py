@@ -4,6 +4,7 @@ import os
 import sqlite3
 
 import numpy as np
+import discord
 from discord.ext.commands import Bot, when_mentioned_or
 from dotenv import load_dotenv
 
@@ -11,12 +12,15 @@ from dotenv import load_dotenv
 MAX_EGO = 50
 MAX_DICE = 100
 
+# configure intents.  messages and message_content are needed, guilds and guild_messages may not be needed.
+intents = discord.Intents(messages=True, guilds=True, guild_messages=True, message_content=True)
+
 # Setup Bot
 load_dotenv()
 BOT_PREFIX = os.getenv("DISCORD_BOT_PREFIX")
 TOKEN = os.getenv("DISCORD_TOKEN")  # Get at discordapp.com/developers/applications/me
 
-bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX))
+bot = Bot(command_prefix=when_mentioned_or(*BOT_PREFIX), intents=intents)
 
 # Setup database
 try:
@@ -268,7 +272,6 @@ def countTriggers(rolls):
 async def verbose(context, option: str):
     global cursor, connection
     try:
-        await context.trigger_typing()
         if (option.lower() == "on"):
             choice = False
         elif (option.lower() == "off"):
@@ -351,7 +354,6 @@ async def initiativeAdd(context, *args):
     global cursor, connection
     msg = ""
     try:
-        await context.trigger_typing()
         # Parse and validate
         parsedArgs = parseInitiativeAdd(args)
         if (not parsedArgs):
@@ -427,7 +429,6 @@ async def initiativeNext(context, *args):
     global cursor, connection
     msg = ""
     try:
-        await context.trigger_typing()
         # Grab the initiative
         cursor.execute("SELECT label, round_number, cur_initiative, verbose FROM initiatives WHERE channel_id=?",
                        (context.channel.id,))
@@ -480,7 +481,6 @@ async def initiativeNext(context, *args):
                     msg += "\t" + str(val) + ":\t" + ", ".join(names) + "\n"
             await context.send(msg)
             msg = ""
-            await context.trigger_typing()
 
         # Do the turn
         cursor.execute(
