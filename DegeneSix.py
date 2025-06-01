@@ -222,7 +222,7 @@ def check(action_number: int, difficulty=0, auto_triggers=0):
     successes = countSuccesses(dice_roll).item() + autos
     triggers = countTriggers(dice_roll).item() + auto_triggers
 
-    is_success = successes >= difficulty
+    is_success = successes >= difficulty if difficulty > 0 else False
     is_not_botch = True if is_success else ones <= successes
 
     return {
